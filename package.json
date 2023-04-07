@@ -12,11 +12,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/bytes": "^3.1.1",
     "@types/js-yaml": "^4.0.5",
-    "@types/koa": "^2.13.6",
-    "@types/koa-bodyparser": "^4.3.10",
-    "@types/koa-logger": "^3.1.2",
-    "@types/koa__router": "^12.0.0",
     "@types/node": "^18.15.11",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
@@ -25,13 +22,13 @@
     "typescript": "^5.0.3"
   },
   "dependencies": {
-    "@koa/router": "^12.0.0",
+    "@fastify/static": "^6.10.0",
     "app-root-path": "^3.1.0",
+    "bytes": "^3.1.2",
     "deepmerge": "^4.3.1",
+    "fastify": "^4.15.0",
     "js-yaml": "^4.1.0",
-    "koa": "^2.14.1",
-    "koa-bodyparser": "^4.4.0",
-    "koa-logger": "^3.2.1",
+    "js2xmlparser": "^5.0.0",
     "log4js": "^6.9.1"
   }
 }
