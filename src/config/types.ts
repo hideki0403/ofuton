@@ -1,3 +1,11 @@
 export type Config = {
-    port: number
+    port: string
+    storage: {
+        path: string
+        maxUploadSize: string
+    }
+    account: {
+        accessKey: string
+        secretKey: string
+    }
 }

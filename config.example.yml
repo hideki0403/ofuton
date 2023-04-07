@@ -1,1 +1,9 @@
 port: 3000
+
+storage:
+  path: ./bucket
+  maxUploadSize: 10mb # Payload size limit
+
+account:
+  accessKey: abcdefg
+  secretKey: 0123456789
