@@ -1,41 +1,37 @@
-import Koa from 'koa'
-import Router from '@koa/router'
-import bodyParser from 'koa-bodyparser'
-import koaLogger from 'koa-logger'
+import Fastify from 'fastify'
+import fastifyStatic from '@fastify/static'
+import path from 'path'
+import bytes from 'bytes'
 
 import config from '@/config'
 import * as logger from '@/utils/logger'
 
+import objects from './objects'
+
 const log = logger.getLogger('server')
-const router = new Router()
-const app = new Koa()
 
-export default function () {
-    app.use(koaLogger(logs => {
-        log.trace(logs)
-    }))
-
-    // create routing
-
-    // Object.keys(Routes.get).forEach((path) => {
-    //     router.get(path, Routes.get[path])
-    // })
-
-    // Object.keys(Routes.post).forEach((path) => {
-    //     router.post(path, Routes.post[path])
-    // })
-
-    router.all('(.*)', async (ctx) => {
-        console.log(ctx.request.body)
+export default async function () {
+    const app = Fastify({
+        bodyLimit: bytes(config.storage.maxUploadSize)
     })
 
-    app.use(bodyParser())
+    app.register(fastifyStatic, {
+        root: path.resolve(config.storage.path),
+        prefix: '/'
+    })
 
-    app.use(router.routes())
-    app.use(router.allowedMethods())
-    // end
+    app.addContentTypeParser('*', { parseAs: 'buffer' }, function (_, payload, done) {
+        done(null, payload)
+    })
 
-    app.listen(config.port, () => {
-        log.info(`Server listening on port ${config.port}`)
+    app.all('/:bucket/*', objects)
+
+    app.listen({ port: Number(config.port) || 3000 }, (err, address) => {
+        if (err) {
+            log.error(err)
+            process.exit(1)
+        }
+
+        log.info(`Server listening at ${address}`)
     })
 }
