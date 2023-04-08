@@ -10,6 +10,8 @@ export default async function createIndex() {
     console.log('Creating index...')
 
     for (const filePath of objects) {
+        if (!fs.existsSync(filePath)) continue
+
         const path = filePath.replace(config.storage.path + '/', '')
         const [bucket, ...key] = path.split('/')
         const stat = await resolveFilename(null, filePath, null)
