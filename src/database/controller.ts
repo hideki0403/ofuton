@@ -1,9 +1,16 @@
 import { db } from './index'
-import type { S3Object } from './types'
-import type { SqliteError } from 'better-sqlite3'
 
 import * as logger from '@/utils/logger'
 const log = logger.getLogger('database')
+
+export type S3Object = {
+    id: string,
+    bucket: string,
+    key: string,
+    mime: string,
+    filename: string,
+    size: number
+}
 
 export function putObject(props: {
     bucket: string
