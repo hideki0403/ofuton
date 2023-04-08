@@ -1,5 +1,4 @@
 import Fastify from 'fastify'
-import fastifyStatic from '@fastify/static'
 import path from 'path'
 import bytes from 'bytes'
 
@@ -13,11 +12,6 @@ const log = logger.getLogger('server')
 export default async function () {
     const app = Fastify({
         bodyLimit: bytes(config.storage.maxUploadSize)
-    })
-
-    app.register(fastifyStatic, {
-        root: path.resolve(config.storage.path),
-        prefix: '/'
     })
 
     app.addContentTypeParser('*', { parseAs: 'buffer' }, function (_, payload, done) {
