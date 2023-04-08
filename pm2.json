@@ -1,0 +1,4 @@
+    {
+        "name": "ofuton",
+        "script": "build/index.js"
+    }
