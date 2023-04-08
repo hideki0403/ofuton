@@ -112,3 +112,6 @@ bucket/
 # Database
 *.sqlite
 *.sqlite3
+
+# Build
+build/
