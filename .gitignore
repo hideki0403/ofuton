@@ -108,3 +108,7 @@ config.yml
 
 # Bucket
 bucket/
+
+# Database
+*.sqlite
+*.sqlite3
