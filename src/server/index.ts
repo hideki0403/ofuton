@@ -20,7 +20,10 @@ export default async function () {
 
     app.all('/:bucket/*', objects)
 
-    app.listen({ port: Number(config.port) || 3000 }, (err, address) => {
+    app.listen({ 
+        port: Number(config.port) || 3000,
+        host: '0.0.0.0'
+    }, (err, address) => {
         if (err) {
             log.error(err)
             process.exit(1)
