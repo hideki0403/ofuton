@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node ./build/index.js",
     "build": "npm run clean && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
+    "clean": "node ./scripts/clean.js",
     "dev": "ts-node-dev -r tsconfig-paths/register --files src/index.ts"
   },
   "keywords": [],
