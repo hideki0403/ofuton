@@ -1,4 +1,4 @@
 const fs = require('fs')
 if (fs.existsSync('build')) {
-  fs.rmdirSync('build', { recursive: true })
+  fs.rmSync('build', { recursive: true })
 }
