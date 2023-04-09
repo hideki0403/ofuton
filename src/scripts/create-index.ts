@@ -15,17 +15,22 @@ export default async function createIndex() {
         const path = filePath.replace(config.storage.path + '/', '')
         const [bucket, ...key] = path.split('/')
 
-        if (database.getObject({ bucket, key: key.join('/') })) continue
+        try {
+            if (database.getObject({ bucket, key: key.join('/') })) continue
 
-        const stat = await resolveFilename(null, filePath, null)
+            const stat = await resolveFilename(null, filePath, null)
 
-        database.putObject({
-            bucket,
-            key: key.join('/'),
-            filename: stat.name,
-            mime: stat.mime || 'application/octet-stream',
-            size: fs.statSync(filePath).size,
-        })
+            database.putObject({
+                bucket,
+                key: key.join('/'),
+                filename: stat.name,
+                mime: stat.mime || 'application/octet-stream',
+                size: fs.statSync(filePath).size,
+            })
+        } catch(err: any) {
+            if (err.code !== 'SQLITE_BUSY') continue
+            objects.push(filePath)
+        }
     }
 
     console.log('Index created.')
