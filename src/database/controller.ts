@@ -61,3 +61,20 @@ export function getObject(props: {
         props.key
     ]) as unknown as S3Object | undefined
 }
+
+export function bucketStat(props: {
+    bucket: string
+}) {
+    const objectsCount = db.prepare('SELECT COUNT(*) AS count FROM objects WHERE bucket = ?').get([
+        props.bucket
+    ]) as unknown as { count: number }
+
+    const size = db.prepare('SELECT SUM(size) AS totalSize FROM objects WHERE bucket = ?').get([
+        props.bucket
+    ]) as unknown as { totalSize: number }
+
+    return {
+        objects: objectsCount.count,
+        totalSize: size.totalSize
+    }
+}

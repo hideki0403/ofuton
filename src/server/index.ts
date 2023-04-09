@@ -5,6 +5,7 @@ import bytes from 'bytes'
 import config from '@/config'
 import * as logger from '@/utils/logger'
 
+import bucket from './bucket'
 import objects from './objects'
 
 const log = logger.getLogger('server')
@@ -18,6 +19,7 @@ export default async function () {
         done(null, payload)
     })
 
+    app.all('/:bucket', bucket)
     app.all('/:bucket/*', objects)
 
     app.listen({ 
