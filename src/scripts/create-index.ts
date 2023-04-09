@@ -14,6 +14,9 @@ export default async function createIndex() {
 
         const path = filePath.replace(config.storage.path + '/', '')
         const [bucket, ...key] = path.split('/')
+
+        if (database.getObject({ bucket, key: key.join('/') })) continue
+
         const stat = await resolveFilename(null, filePath, null)
 
         database.putObject({
