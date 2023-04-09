@@ -53,6 +53,7 @@ export default async function(req: FastifyRequest, res: FastifyReply) {
         res.header('Content-Type', object.mime)
         res.header('Content-Length', object.size)
         res.header('Content-Disposition', object.filename)
+        res.header('Cache-Control', 'max-age=31536000, immutable')
 
         return res.send(stream)
     }
