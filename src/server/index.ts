@@ -15,6 +15,11 @@ export default async function () {
         bodyLimit: bytes(config.storage.maxUploadSize)
     })
 
+    app.setErrorHandler((err, req, res) => {
+        log.error(`RequestID: ${req.id},`, err)
+        res.status(500).send(`Internal Server Error (RequestID: ${req.id})`)
+    })
+
     app.addContentTypeParser('*', { parseAs: 'buffer' }, function (_, payload, done) {
         done(null, payload)
     })
