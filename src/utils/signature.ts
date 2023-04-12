@@ -43,7 +43,11 @@ function getStringToSign(request: FastifyRequest, credential: string[], signedHe
 }
 
 export function verifySignature(request: FastifyRequest, accessKey: string, secretKey: string) {
-    const components = getComponents(request.headers.authorization as string)
+    if (!request.headers.authorization) {
+        return false
+    }
+
+    const components = getComponents(request.headers.authorization)
     const signature = components.get('Signature')
     const credential = components.get('Credential')?.split('/') // [AccessKey, Date, Region, Service]
 
