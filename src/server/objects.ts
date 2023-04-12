@@ -29,7 +29,7 @@ export default async function(req: FastifyRequest, res: FastifyReply) {
     const key = params['*']
 
     // メソッドチェック
-    if (!['GET', 'POST', 'PUT', 'DELETE'].includes(req.method)) {
+    if (!includeMethod(req.method, ['GET', 'HEAD', 'POST', 'PUT', 'DELETE'])) {
         return res.status(405).send('Method Not Allowed')
     }
 
@@ -45,17 +45,17 @@ export default async function(req: FastifyRequest, res: FastifyReply) {
     const fileDir = path.dirname(filePath)
 
     // GETリクエストならファイルを返す
-    if (req.method === 'GET') {
+    // HEADリクエストならヘッダのみ
+    if (includeMethod(req.method, ['GET', 'HEAD'])) {
         const object = database.getObject({ bucket, key })
         if (!object) return res.status(404).send('Not Found')
 
-        const stream = fs.createReadStream(filePath)
         res.header('Content-Type', object.mime)
         res.header('Content-Length', object.size)
         res.header('Content-Disposition', object.filename)
         res.header('Cache-Control', 'max-age=31536000, immutable')
 
-        return res.send(stream)
+        return req.method === 'HEAD' ? res.send()  : res.send(fs.createReadStream(filePath))
     }
 
     // POST, PUT, DELETEでのリクエスト時はAccessKey, SecretKeyのチェックを行う
@@ -64,7 +64,7 @@ export default async function(req: FastifyRequest, res: FastifyReply) {
     }
 
     // POST, PUTでのリクエスト時はディレクトリの存在チェックを行う
-    if (['POST', 'PUT'].includes(req.method) && !fs.existsSync(fileDir)) {
+    if (includeMethod(req.method, ['POST', 'PUT']) && !fs.existsSync(fileDir)) {
         fs.mkdirSync(fileDir, { recursive: true })
     }
 
@@ -198,4 +198,8 @@ function cleanupMultiPartUploads(uploadId: string) {
 
 function cleanupTempDir(path: string) {
     if (fs.existsSync(path)) fs.rmSync(path, { recursive: true })
+}
+
+function includeMethod(method: string, methods: string[]) {
+    return methods.includes(method)
 }
