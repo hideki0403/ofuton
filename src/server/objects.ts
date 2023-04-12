@@ -68,6 +68,11 @@ export default async function(req: FastifyRequest, res: FastifyReply) {
         fs.mkdirSync(fileDir, { recursive: true })
     }
 
+    // x-idクエリが指定されているかチェック
+    if (!query['x-id']) {
+        return res.status(400).send('"x-id" query is required')
+    }
+
     switch (query['x-id']) {
         case 'PutObject': {
             fs.writeFileSync(filePath, req.body as Buffer)
@@ -177,7 +182,7 @@ export default async function(req: FastifyRequest, res: FastifyReply) {
         }
 
         default: {
-            return
+            return res.status(400).send('Unknown type')
         }
     }
 }
