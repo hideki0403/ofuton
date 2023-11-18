@@ -8,7 +8,7 @@ export default async function(filename: string | null | undefined, fallbackPath:
 
     // extにnullを渡した場合のみ拡張子を推測する
     if (ext === null) {
-        const type = await fileType.fromFile(fallbackPath)
+        const type = await fileType.fileTypeFromFile(fallbackPath)
         if (type) {
             mime = type.mime
             ext = type.ext
