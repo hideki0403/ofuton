@@ -34,6 +34,11 @@ export default async function () {
         handler: objects,
     })
 
+    app.addHook('onResponse', (req, res) => {
+        if (!(req.method === 'GET' || req.method === 'HEAD')) return
+        log.info(`${req.method} ${res.statusCode} ${req.url} (${res.getResponseTime()}ms)`)
+    })
+
     app.listen({ 
         port: Number(config.port) || 3000,
         host: '0.0.0.0'

@@ -32,7 +32,8 @@
     "fastify": "^4.24.3",
     "js-yaml": "^4.1.0",
     "js2xmlparser": "^5.0.0",
-    "log4js": "^6.9.1",
-    "multistream": "^4.1.0"
+    "multistream": "^4.1.0",
+    "pino": "^8.16.2",
+    "pino-pretty": "^10.2.3"
   }
 }

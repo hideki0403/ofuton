@@ -15,7 +15,7 @@ type UploadMeta = {
     tempDirPath: string,
 }
 
-const log = logger.getLogger('server:objects')
+const log = logger.getLogger('bucket')
 const acceptableMultiPartUploadIds = new Map<string, UploadMeta>()
 
 export default async function(req: FastifyRequest, res: FastifyReply) {
@@ -53,11 +53,13 @@ export default async function(req: FastifyRequest, res: FastifyReply) {
     switch (query['x-id']) {
         case 'PutObject': {
             fs.writeFileSync(filePath, req.body as Buffer)
+            log.info(`Created object: ${bucket} - ${key} (${req.headers['content-length']} bytes)`)
             return res.send()
         }
 
         case 'DeleteObject': {
             if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
+            log.info(`Deleted object: ${bucket} - ${key}`)
             return res.send()
         }
 
@@ -78,6 +80,8 @@ export default async function(req: FastifyRequest, res: FastifyReply) {
                 tempDirPath
             })
 
+            log.debug(`Created multipart upload: ${uploadId}`)
+
             return res.send(xmlParser.parse('InitiateMultipartUploadResult', {
                 Bucket: bucket,
                 Key: key,
@@ -96,8 +100,9 @@ export default async function(req: FastifyRequest, res: FastifyReply) {
             const partFilePath = path.join(os.tmpdir(), `ofuton-${uploadId}`, `${uploadId}.${partNumber}.part`)
             fs.writeFileSync(partFilePath, body)
 
-            res.header('ETag', `"${crypto.randomBytes(16).toString('hex')}"`)
+            log.info(`Uploaded part: ${uploadId} / ${partNumber} (${body.length} bytes)`)
 
+            res.header('ETag', `"${crypto.randomBytes(16).toString('hex')}"`)
             return res.send()
         }
 
@@ -117,6 +122,8 @@ export default async function(req: FastifyRequest, res: FastifyReply) {
             const partFiles = fs.readdirSync(partDirPath).sort().map(partFile => path.join(partDirPath, partFile))
             await stream.merge(partFiles, filePath)
 
+            log.info(`Completed multipart upload: ${uploadId}`)
+
             cleanupMultiPartUploads(uploadId)
             return res.send(xmlParser.parse('CompleteMultipartUploadResult', {
                 Location: req.url.split('?')[0],
@@ -132,6 +139,8 @@ export default async function(req: FastifyRequest, res: FastifyReply) {
             if (!uploadId) {
                 return res.status(400).send('Bad request')
             }
+
+            log.info(`Aborted multipart upload: ${uploadId}`)
 
             cleanupMultiPartUploads(uploadId)
             return res.send()
