@@ -27,7 +27,7 @@ export default async function () {
     app.register(fastifyStatic, {
         root: appRootPath.resolve(config.storage.path),
         immutable: true,
-        maxAge: 31536000,
+        maxAge: '1y',
     })
 
     app.route({
