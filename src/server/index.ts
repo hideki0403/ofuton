@@ -1,11 +1,11 @@
 import Fastify from 'fastify'
-import path from 'path'
+import fastifyStatic from '@fastify/static'
+import appRootPath from 'app-root-path'
 import bytes from 'bytes'
 
 import config from '@/config'
 import * as logger from '@/utils/logger'
 
-import bucket from './bucket'
 import objects from './objects'
 
 const log = logger.getLogger('server')
@@ -24,8 +24,15 @@ export default async function () {
         done(null, payload)
     })
 
-    app.all('/:bucket', bucket)
-    app.all('/:bucket/*', objects)
+    app.register(fastifyStatic, {
+        root: appRootPath.resolve(config.storage.path),
+    })
+
+    app.route({
+        url: '/:bucket/*',
+        method: ['POST', 'PUT', 'DELETE'],
+        handler: objects,
+    })
 
     app.listen({ 
         port: Number(config.port) || 3000,

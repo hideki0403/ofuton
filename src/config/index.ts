@@ -1,10 +1,10 @@
 import * as fs from 'fs'
 import * as yaml from 'js-yaml'
-import rootPath from 'app-root-path'
+import appRootPath from 'app-root-path'
 import deepmerge from 'deepmerge'
 import type { Config } from './types'
 
-const config = yaml.load(fs.readFileSync(rootPath.resolve('config.yml'), 'utf8'), {
+const config = yaml.load(fs.readFileSync(appRootPath.resolve('config.yml'), 'utf8'), {
     schema: yaml.FAILSAFE_SCHEMA
 }) as Config
 
