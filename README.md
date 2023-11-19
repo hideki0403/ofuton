@@ -1,4 +1,6 @@
 # ofuton
+English | [日本語](README_ja.md)  
+  
 A lightweight object storage exclusive for misskey.  
 
 ## Features
@@ -51,15 +53,15 @@ pnpm start
 Open your instance's control panel and go to "Object Storage" tab.  
 Set the following values. (The values in the brackets are optional)
 
-| Name | Value |
-| ---- | ----- |
-| BaseURL | `https://<domain>/<bucket>` |
-| Bucket | `<bucket>` |
-| Prefix | `<prefix>` |
-| Endpoint | `<IP>:<port>` |
+| Name | Value | Example |
+| ---- | ----- | ------- |
+| BaseURL | `https://<domain>/<bucket>` | `https://media.example.com/static` |
+| Bucket | `<bucket>` | `static` |
+| Prefix | `<prefix>` | `misskey` |
+| Endpoint | `<IP>:<port>` | `192.168.0.1:3000` |
 | Region | `auto` |
-| AccessKey | `<accessKey>` |
-| SecretKey | `<secretKey>` |
+| AccessKey | `<accessKey>` | `hogehoge` |
+| SecretKey | `<secretKey>` | `fugafuga` |
 | UseSSL | `false` |
 | Connect over Proxy | `false` |
 | Set "publc-read" on upload | `false` |
