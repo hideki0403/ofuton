@@ -31,6 +31,14 @@ export default async function () {
     })
 
     app.route({
+        url: '/robots.txt',
+        method: 'GET',
+        handler: (_, res) => {
+            res.type('text/plain').send('User-agent: *\nDisallow: /')
+        }
+    })
+
+    app.route({
         url: '/:bucket/*',
         method: ['POST', 'PUT', 'DELETE'],
         handler: objects,
