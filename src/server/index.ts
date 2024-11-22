@@ -41,8 +41,9 @@ export default async function () {
         log.info(`${req.method} ${res.statusCode} ${req.url} (${res.elapsedTime.toFixed(1)}ms)`)
     })
 
-    app.listen({ 
-        port: Number(config.port) || 3000,
+    const port = Number(config.port)
+    app.listen({
+        port: isNaN(port) ? 3000 : port,
         host: '0.0.0.0'
     }, (err, address) => {
         if (err) {
