@@ -38,7 +38,7 @@ export default async function () {
 
     app.addHook('onResponse', (req, res) => {
         if (!(req.method === 'GET' || req.method === 'HEAD')) return
-        log.info(`${req.method} ${res.statusCode} ${req.url} (${res.getResponseTime()}ms)`)
+        log.info(`${req.method} ${res.statusCode} ${req.url} (${res.elapsedTime.toFixed(1)}ms)`)
     })
 
     app.listen({ 
